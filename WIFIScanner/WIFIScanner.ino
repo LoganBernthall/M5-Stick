@@ -23,6 +23,25 @@ void drawWifiIcon(int cx, int cy, uint16_t color) {
   M5.Lcd.fillRect(cx - 20, cy + 12, 40, 20, BLACK);
 }
 
+void buttonStart(){
+  //Fucntion to proceed from start menu
+
+  //Variable declaration
+  char startScan[] = "Scanning...";
+  char stopScan[] = "Hold B button to cancel";
+  M5.lcd.fillScreen(BLACK);
+  M5.lcd.setCursor(10, 30);
+  M5.Lcd.setTextSize(2);
+  M5.lcd.print(startScan);
+  M5.lcd.setCursor(10, 40);
+  M5.Lcd.setTextSize(1);
+  M5.lcd.print(stopScan);
+}
+
+void buttonCancel(){
+  //Function to cancel scan
+  
+}
 
 void setup() {
   //Start
@@ -59,6 +78,17 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  M5.update();
+  
+  if (M5.BtnA.wasPressed()){
+    buttonStart();   
+  }
+
+  if(M5.BtnB.pressedFor(100)){
+    setup();
+  } 
+  M5.update();
+
+
 
 }
