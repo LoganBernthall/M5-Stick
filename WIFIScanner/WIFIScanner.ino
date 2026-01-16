@@ -34,8 +34,10 @@ void setup() {
   int cx = M5.Lcd.width() / 2;
   int iconY = 40;
   int screenW = M5.Lcd.width();
+  int screenH = M5.Lcd.height();
   int centerX = screenW / 2;
-  
+  int logoY = 40; //Change to move
+  int logoX = (screenW / 2) + 50; //Change 50 to move right
   //Setting portrait landscape
   M5.Lcd.setRotation(3);
   
@@ -43,8 +45,7 @@ void setup() {
   M5.Lcd.setTextSize(2);
   
   //Input logo
-  int logoY = 8;             // near the top
-  drawWifiIcon(centerX, logoY, BLUE);  
+  drawWifiIcon(logoX, logoY, BLUE);  
   
   M5.Lcd.setTextDatum(MC_DATUM);   // Middle-center anchor
   M5.Lcd.drawString(greeting,
