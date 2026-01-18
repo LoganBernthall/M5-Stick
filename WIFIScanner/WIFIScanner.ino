@@ -29,13 +29,43 @@ void buttonStart(){
   //Variable declaration
   char startScan[] = "Scanning...";
   char stopScan[] = "Hold B button to cancel";
-  M5.lcd.fillScreen(BLACK);
-  M5.lcd.setCursor(10, 30);
+  M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setCursor(10, 30);
   M5.Lcd.setTextSize(2);
-  M5.lcd.print(startScan);
-  M5.lcd.setCursor(10, 40);
+  M5.Lcd.print(startScan);
+  M5.Lcd.setCursor(10, 60);
   M5.Lcd.setTextSize(1);
-  M5.lcd.print(stopScan);
+  M5.Lcd.print(stopScan);
+}
+
+void scan(){
+  //Function to scan WiFi networks
+  M5.Lcd.fillScreen(BLACK);
+
+  //Ensure WiFi is on station mode and M5Stick is disconnected from anything
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+
+    //Begin scanner
+  int scanW = WiFi.scanNetworks();
+
+ if (scanW == 0) {
+    Serial.println("No networks found");
+  } else {
+    
+    Serial.printf("%d networks found:\n", scanW);
+    for (int i = 0; i < scanW; i++) {
+      Serial.printf(
+        "%2d: %-25s  RSSI: %4d dBm  %s\n",
+        i + 1,
+        WiFi.SSID(i).c_str(),
+        WiFi.RSSI(i),
+        (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "Open" : "Secured"
+      );
+    }
+  }
+  Serial.println("----");
+
 }
 
 void buttonCancel(){
@@ -45,6 +75,7 @@ void buttonCancel(){
 
 void setup() {
   //Start
+  Serial.begin(115200);
   M5.begin();
   
   //Variable declaration
@@ -81,8 +112,11 @@ void loop() {
   M5.update();
   
   if (M5.BtnA.wasPressed()){
-    buttonStart();   
-  }
+    buttonStart();
+    M5.update();
+    delay(2000); 
+    scan();
+}
 
   if(M5.BtnB.pressedFor(100)){
     setup();
