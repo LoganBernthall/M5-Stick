@@ -44,28 +44,33 @@ void scan(){
 
   //Ensure WiFi is on station mode and M5Stick is disconnected from anything
   WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
+  WiFi.disconnect(true);
+  delay(100);
 
-    //Begin scanner
+  //Begin scanner
   int scanW = WiFi.scanNetworks();
 
- if (scanW == 0) {
-    Serial.println("No networks found");
+  //Set screen params
+  M5.Lcd.setTextSize(1);
+  M5.Lcd.setCursor(5, 5);
+
+int maxToShow = 5;
+
+  if (scanW == 0) {
+    M5.Lcd.print("No networks found");
   } else {
-    
-    Serial.printf("%d networks found:\n", scanW);
-    for (int i = 0; i < scanW; i++) {
-      Serial.printf(
-        "%2d: %-25s  RSSI: %4d dBm  %s\n",
+    int count = min(scanW, maxToShow);
+
+    for (int i = 0; i < count; i++) {
+      M5.Lcd.printf(
+        "%d:%s\n%d dBm %s\n\n",
         i + 1,
         WiFi.SSID(i).c_str(),
         WiFi.RSSI(i),
-        (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "Open" : "Secured"
+        (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "Open" : "Sec"
       );
     }
   }
-  Serial.println("----");
-
 }
 
 void buttonCancel(){
