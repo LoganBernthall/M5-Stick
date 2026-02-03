@@ -11,7 +11,7 @@ of rather random projects.
 ---
 ## Projects:
 
-[WiFi Scanner] (https://github.com/LoganBernthall/M5-Stick/tree/main/WIFIScanner) 
+[WiFi Scanner](https://github.com/LoganBernthall/M5-Stick/tree/main/WIFIScanner) 
 
 * A simple scanner that looks for networks and displays if they are 
 open or closed.
