@@ -7,13 +7,21 @@ function GetCPUParams
 {
 
 #Get CPU Load
-$TotalLoads = (wmic cpu get LoadPercentage)
+$TotalLoads = (wmic cpu get LoadPercentage |
+    Select-Object -Skip 1 |
+    Where-Object { $_ -match '\d+' } |
+    ForEach-Object { [int]$_ }
+)
 
-#Get CPU Temp
-$TotalTemp = (Get-CimInstance -Namespace root/wmi -ClassName MsAcpi_ThermalZoneTemperature -Filter "Active='True' and CurrentTemperature<>2732" -Property InstanceName, CurrentTemperature |
-    Select-Object InstanceName, @{n='CurrentTemperatureC';e={'{0:n0} C' -f (($_.CurrentTemperature - 2732) / 10.0)}})
+$TotalTemp = Get-CimInstance -Namespace root/wmi -ClassName MsAcpi_ThermalZoneTemperature |
+    Select-Object -First 1 -ExpandProperty CurrentTemperature |
+    ForEach-Object { "{0} C" -f [math]::Round(($_ - 2732) / 10) }
 
-Write-Output $TotalLoads $TotalTemp
+    return @{
+        CPU  = $TotalLoads
+        Temp = $TotalTemp
+    }
+
 }
 
 function GetRAMParams
@@ -21,9 +29,25 @@ function GetRAMParams
 
 #Get Ram usage
 $TotalUsage = (Get-CimInstance -ClassName CIM_OperatingSystem).FreePhysicalMemory / 1024
-Write-Output "Memory Free (MB)" $TotalUsage
+
+return [math]::Round($TotalUsage)
+
+}
+
+Function FormatToJSON
+{
+#Converts to JSON format
+    
+    $cpu = GetCPUParams
+    $ram = GetRAMParams
+
+    [PSCustomObject]@{
+        Temp     = $cpu.Temp
+        RamFree  = $ram
+        CPU      = $cpu.CPU
+    }
 
 }
 
 #Loop every 5 seconds
-while ($true) {GetCPUParams; GetRamParams; Start-Sleep -Seconds 5}
+while ($true) {FormatToJSON | ConvertTo-Json -Compress; Start-Sleep -Seconds 5}
