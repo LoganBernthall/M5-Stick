@@ -49,5 +49,36 @@ Function FormatToJSON
 
 }
 
-#Loop every 5 seconds
-while ($true) {FormatToJSON | ConvertTo-Json -Compress; Start-Sleep -Seconds 5}
+#Loop every 5 seconds - Deprecated but kept for testing of data loop
+#while ($true) {FormatToJSON | ConvertTo-Json -Compress; Start-Sleep -Seconds 5}
+
+#Creating HTTP Server
+$Listener = New-Object System.Net.HttpListener
+$Listener.Prefixes.Add("http://+:5000/")
+$Listener.Start()
+
+Write-Host "HTTP server running on port 5000"
+Write-Host "Endpoint: /stats"
+
+while ($Listener.IsListening) {
+
+    $Context  = $Listener.GetContext()
+    $request  = $Context.Request
+    $Response = $Context.Response
+
+    if ($request.Url.AbsolutePath -eq "/stats") {
+
+        $JSON = FormatToJSON | ConvertTo-Json -Compress
+        $buffer = [System.Text.Encoding]::UTF8.GetBytes($JSON)
+
+        $Response.ContentType = "application/json"
+        $Response.ContentLength64 = $Buffer.Length
+        $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+
+    }
+    else {
+        $Response.StatusCode = 404
+    }
+
+    $response.OutputStream.Close()
+}
