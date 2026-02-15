@@ -12,6 +12,7 @@ creates a simple HTTP server.
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+#include <cstring> 
 
 //Pre-Reqs
 const char* ssid     = "YOUR_WIFI_NAME";
@@ -35,17 +36,28 @@ void setup() {
                     M5.Lcd.width() / 2,
                     M5.Lcd.height() / 2 + 20);
 
-  WiFi.begin(ssid, password);
-  M5.Lcd.setCursor(0, 0);
-  M5.Lcd.println("Connecting...");
-
-  while (WiFi.status() != WL_CONNECTED)
+  //Check Creds
+  if (strcmp(ssid, "YOUR_WIFI_NAME") == 0 ||
+      strcmp(password, "YOUR_WIFI_PASSWORD") == 0)
   {
-    delay(500);
-    Serial.print(".");
+    M5.Lcd.fillScreen(BLACK);
+    M5.Lcd.setCursor(0, 0);
+    M5.Lcd.println("ERROR:");
+    M5.Lcd.println("Set WiFi");
+    M5.Lcd.println("credentials in");
+    M5.Lcd.println("the sketch!");
+    
+    while (true)
+    {
+      M5.update();
+    }
   }
 
-  M5.Lcd.println("WiFi OK");
+  // Only runs if credentials are valid
+  WiFi.begin(ssid, password);
+
+  M5.Lcd.setCursor(0, 0);
+  M5.Lcd.println("Connecting...");
 }
 
 void loop()
