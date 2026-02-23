@@ -8,6 +8,11 @@
 
 #include <M5StickCPlus.h>
 
+//Opponent
+int opponentY = 60;     
+int opponentSpeed = 2;  
+int paddleHeight = 20;
+
 void game()
 {
   //Game function
@@ -23,6 +28,7 @@ void game()
   M5.Lcd.fillRect(115, 40, 5, 10, WHITE);
   M5.Lcd.fillRect(115, 25, 5, 10, WHITE);
   M5.Lcd.fillRect(115, 10, 5, 10, WHITE);
+
 }
 
 void setup() {
@@ -61,6 +67,23 @@ void loop() {
     delay(2000); 
     game();
     }
+
+  // Opponent 
+  M5.Lcd.fillRect(230, opponentY, 5, paddleHeight, BLACK);
+
+  // Move paddle
+  opponentY += opponentSpeed;
+
+  // Bounce off top and bottom
+  if (opponentY <= 0 || opponentY + paddleHeight >= M5.Lcd.height())
+  {
+    opponentSpeed = -opponentSpeed;
+  }
+
+  // Draw new paddle
+  M5.Lcd.fillRect(230, opponentY, 5, paddleHeight, WHITE);
+
+  delay(20);  // controls speed
 
 
 }
