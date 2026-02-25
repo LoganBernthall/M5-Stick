@@ -8,28 +8,16 @@
 
 #include <M5StickCPlus.h>
 
+//Player (ME!)
+int playerY = 60;
+int playerSpeed = 3;
+int playerHeight = 20;
+
 //Opponent
 int opponentY = 60;     
 int opponentSpeed = 2;  
 int paddleHeight = 20;
 
-void game()
-{
-  //Game function
-
-  //Beging making Pong court
-  M5.Lcd.fillScreen(BLACK);
-  //Middle line
-  M5.Lcd.fillRect(115, 115, 5, 10, WHITE);
-  M5.Lcd.fillRect(115, 100, 5, 10, WHITE);
-  M5.Lcd.fillRect(115, 85, 5, 10, WHITE);
-  M5.Lcd.fillRect(115, 70, 5, 10, WHITE);
-  M5.Lcd.fillRect(115, 55, 5, 10, WHITE);
-  M5.Lcd.fillRect(115, 40, 5, 10, WHITE);
-  M5.Lcd.fillRect(115, 25, 5, 10, WHITE);
-  M5.Lcd.fillRect(115, 10, 5, 10, WHITE);
-
-}
 
 void setup() {
   // put your setup code here, to run once:
@@ -58,32 +46,48 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   M5.update();
 
-    if (M5.BtnA.wasPressed())
-    {
-    M5.update();
-    delay(2000); 
-    game();
-    }
+  // -------- PLAYER CONTROLS --------
+  if (M5.BtnA.isPressed())  // Move Up
+  {
+    playerY -= playerSpeed;
+  }
 
-  // Opponent 
-  M5.Lcd.fillRect(230, opponentY, 5, paddleHeight, BLACK);
+  if (M5.BtnB.isPressed())  // Move Down
+  {
+    playerY += playerSpeed;
+  }
 
-  // Move paddle
+  // Keep player on screen
+  if (playerY < 0)
+    playerY = 0;
+
+  if (playerY + playerHeight > M5.Lcd.height())
+    playerY = M5.Lcd.height() - playerHeight;
+
+  // -------- OPPONENT MOVEMENT --------
   opponentY += opponentSpeed;
 
-  // Bounce off top and bottom
   if (opponentY <= 0 || opponentY + paddleHeight >= M5.Lcd.height())
   {
     opponentSpeed = -opponentSpeed;
   }
 
-  // Draw new paddle
+  // -------- DRAW FRAME --------
+  M5.Lcd.fillScreen(BLACK);
+
+  // Middle dotted line
+  for (int y = 10; y < 130; y += 15)
+  {
+    M5.Lcd.fillRect(115, y, 5, 10, WHITE);
+  }
+
+  // Draw player (left side)
+  M5.Lcd.fillRect(5, playerY, 5, playerHeight, WHITE);
+
+  // Draw opponent (right side)
   M5.Lcd.fillRect(230, opponentY, 5, paddleHeight, WHITE);
 
-  delay(20);  // controls speed
-
-
+  delay(20);
 }
