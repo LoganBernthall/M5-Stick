@@ -18,6 +18,13 @@ int opponentY = 60;
 int opponentSpeed = 2;  
 int paddleHeight = 20;
 
+// Ball
+int ballX = 120;
+int ballY = 67;
+int ballSize = 4;
+
+int ballSpeedX = 2;
+int ballSpeedY = 2;
 
 void setup() {
   // put your setup code here, to run once:
@@ -74,6 +81,64 @@ void loop() {
     opponentSpeed = -opponentSpeed;
   }
 
+// -------- BALL MOVEMENT --------
+ballX += ballSpeedX;
+ballY += ballSpeedY;
+
+// Bounce off top
+if (ballY <= 0)
+{
+  ballSpeedY = -ballSpeedY;
+}
+
+// Bounce off bottom
+if (ballY + ballSize >= M5.Lcd.height())
+{
+  ballSpeedY = -ballSpeedY;
+}
+
+// -------- PLAYER COLLISION --------
+if (ballX <= 10 &&                      // near player paddle
+    ballY + ballSize >= playerY &&      // bottom of ball below paddle top
+    ballY <= playerY + playerHeight)    // top of ball above paddle bottom
+{
+  ballSpeedX = -ballSpeedX;
+}
+
+// -------- OPPONENT COLLISION --------
+if (ballX + ballSize >= 230 && 
+    ballY + ballSize >= opponentY &&
+    ballY <= opponentY + paddleHeight)
+{
+  ballSpeedX = -ballSpeedX;
+}
+
+// -------- BALL OUT OF BOUNDS --------
+
+// Player missed
+if (ballX < 0)
+{
+  ballX = 120;
+  ballY = 67;
+
+  ballSpeedX = 2;   // send toward opponent
+  ballSpeedY = 2;
+
+  delay(500);
+}
+
+// Opponent missed
+if (ballX > M5.Lcd.width())
+{
+  ballX = 120;
+  ballY = 67;
+
+  ballSpeedX = -2;  // send toward player
+  ballSpeedY = 2;
+
+  delay(500);
+}
+
   // -------- DRAW FRAME --------
   M5.Lcd.fillScreen(BLACK);
 
@@ -88,6 +153,9 @@ void loop() {
 
   // Draw opponent (right side)
   M5.Lcd.fillRect(230, opponentY, 5, paddleHeight, WHITE);
+
+  //Ball
+  M5.Lcd.fillRect(ballX, ballY, ballSize, ballSize, WHITE);
 
   delay(20);
 }
