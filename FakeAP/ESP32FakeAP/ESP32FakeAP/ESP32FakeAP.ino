@@ -1,5 +1,7 @@
-﻿#include <WiFi.h>
+#include <WiFi.h>
 #include <WebServer.h>
+
+
 
 WebServer server(80);
 
