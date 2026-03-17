@@ -11,6 +11,7 @@ void setup() {
   char greeting[] = "M5Stick Capitve Portal AP";
   char instrucHome[] = "Press Home To Start";
 
+  M5.Lcd.setRotation(3);
   M5.Lcd.fillScreen(BLACK);
   M5.Lcd.setTextSize(2); 
 
