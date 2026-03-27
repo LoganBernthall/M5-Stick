@@ -32,3 +32,6 @@ picks up the data posted and displays.
 * A fake WiFi AP which serves the users a captive portal to enter details - redirects after send to a warning about cyber security and being more aware. This project also utilises the M5 screen by displaying the connected devices MAC address and number of connected users.
 
 ---
+[TVIRBlaster](https://github.com/LoganBernthall/M5-Stick/tree/main/TVIRBlaster)
+
+* IR blaster that sends 32-bit NEC IR shutdown codes for common TV brands - will expand code DB!
