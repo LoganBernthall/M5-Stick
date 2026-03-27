@@ -27,8 +27,8 @@ picks up the data posted and displays.
 * Pong on ESP32!
 
 ---
-[FakeAP](https://github.com/LoganBernthall/M5-Stick/tree/main/FakeAP/ESP32FakeAP)
+[FakeAP]([https://github.com/LoganBernthall/M5-Stick/tree/main/FakeAP/ESP32FakeAP](https://github.com/LoganBernthall/M5-Stick/tree/main/M5CaptivePortalFake/ESP32FakeAP_ino)
 
-* IN PROGRESS - Plan to be a Fake AP for education and ethical purposes only.
+* A fake WiFi AP which serves the users a captive portal to enter details - redirects after send to a warning about cyber security and being more aware. This project also utilises the M5 screen by displaying the connected devices MAC address and number of connected users.
 
 ---
